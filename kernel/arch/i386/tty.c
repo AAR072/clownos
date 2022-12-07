@@ -2,10 +2,20 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <kernel/tty.h>
+#include <kernel/util.h>
 
 #include "vga.h"
+static inline uint8_t inb(uint16_t port) {
+        uint8_t ret;
+        asm volatile("in %1, %0" : "=a"(ret) : "Nd"(port));
+        return ret;
+}
+static inline void outb(uint16_t port, uint8_t data) {
+  asm volatile("out %0, %1" :: "a"(data), "Nd"(port));
+}
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
@@ -64,3 +74,25 @@ void terminal_write(const char* data, size_t size) {
 void terminal_writestring(const char* data) {
 	terminal_write(data, strlen(data));
 }
+void terminal_clear_screen(int fgcolor) {
+	terminal_row = 0;
+	terminal_column = 0;
+	terminal_buffer = VGA_MEMORY;
+	for (size_t y = 0; y < VGA_HEIGHT; y++) {
+		for (size_t x = 0; x < VGA_WIDTH; x++) {
+			const size_t index = y * VGA_WIDTH + x;
+			terminal_buffer[index] = vga_entry(' ', vga_entry_color(fgcolor, VGA_COLOR_BLACK));
+		}
+	}
+}
+uint16_t get_cursor_position(void)
+{
+    uint16_t pos = 0;
+    outb(0x3D4, 0x0F);
+    pos |= inb(0x3D5);
+    outb(0x3D4, 0x0E);
+    pos |= ((uint16_t)inb(0x3D5)) << 8;
+    return pos;
+}
+
+
