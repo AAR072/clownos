@@ -8,3 +8,6 @@
 `qemu.sh`: Launch ISO with Qemu
 `quickstart.sh`: Run all scripts
 `target-triplet-to-arch.sh`: Config target triplet
+## Sysroot
+- System root directory
+- Empty right now, will fill up as more components are added
