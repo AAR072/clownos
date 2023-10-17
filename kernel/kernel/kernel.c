@@ -1,10 +1,9 @@
 #include <stdio.h>
-
 #include <kernel/tty.h>
 #include <kernel/util.h>
+#include <string.h>
 
-// how to acess asm
-// register int ecx asm("ecx");
+// Define VGA text mode colors
 
 // 	VGA_COLOR_BLACK = 0,
 // 	VGA_COLOR_BLUE = 1,
@@ -23,19 +22,39 @@
 // 	VGA_COLOR_LIGHT_BROWN = 14,
 // 	VGA_COLOR_WHITE = 15,
 
+char *input;               // A variable for storing input from the user (currently unused).
+char *terminalIcon = "$>"; // Icon or prompt displayed in the terminal.
 
-// input from user
-char *input;
-// icon printed in terminal
-// variable for organization
-char *terminalIcon = "$>";
-currentColors = 2;
+char *term = "\n"; // Newline character, used to move to the next line.
+char *longtext = "sahjdsalhlsaakjhfalkjshflkjdsahflksajdhflksajhflkjsafhsalkfhdsalkjfsadfhakjsdhfsalkjdhf";
 
-void kernel_main(void) {
-	
-	terminal_initialize();
-	terminal_setcolor(currentColors);
-	printf(terminalIcon);
-	printf(get_cursor_position());
-	
+int currentColors = 2; // Current text color for the terminal (e.g., VGA_COLOR_LIGHT_GREY).
+
+// The main function for the kernel.
+void kernel_main(void)
+{
+    // Initialize the terminal for text output.
+    terminal_initialize();
+
+    // Set the text color for the terminal.
+    terminal_setcolor(currentColors);
+
+    // Print the terminal icon or prompt (e.g., "$>").
+    printf(terminalIcon);
+    printf(term);
+
+    // Update cursor pos
+    update_cursor(7, 1);
+
+    int posNumber = get_cursor_position();
+    // Calc X and Y pos
+    int y = posNumber / 80;
+    int x = posNumber % 80;
+    // Convert to CHAR
+    char XPOS = (char)(x + '0');
+    char YPOS = (char)(y + '0');
+    // Display Charc
+
+    printf("%c", XPOS);
+    printf("%c", YPOS);
 }
