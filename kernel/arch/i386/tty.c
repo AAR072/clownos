@@ -8,6 +8,8 @@
 #include <kernel/util.h>
 
 #include "vga.h"
+int cursorXPos;
+int cursorYPos;
 static inline uint8_t inb(uint16_t port) {
         uint8_t ret;
         asm volatile("in %1, %0" : "=a"(ret) : "Nd"(port));
@@ -110,3 +112,36 @@ void update_cursor(int x, int y)
 	outb(0x3D4, 0x0E);
 	outb(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
+void terminal_printat(const char* str, uint8_t color, size_t x, size_t y) {
+    size_t index = y * VGA_WIDTH + x;
+    size_t str_len = strlen(str);
+
+    // Print "$>"
+    terminal_buffer[index] = vga_entry('$', color);
+    x++;
+    index = y * VGA_WIDTH + x;
+    terminal_buffer[index] = vga_entry('>', color);
+    x++;
+
+    for (size_t i = 0; i < str_len; i++) {
+        if (x >= VGA_WIDTH) {
+            x = 0;
+            y++;
+        }
+
+        if (y >= VGA_HEIGHT) {
+            y = 0;
+        }
+
+        index = y * VGA_WIDTH + x;
+        terminal_buffer[index] = vga_entry(str[i], color);
+        x++;
+    }
+
+    // Update the cursor position to the end of the string
+    update_cursor(x, y);
+    cursorXPos = x;
+    cursorYPos = y;
+}
+
+
