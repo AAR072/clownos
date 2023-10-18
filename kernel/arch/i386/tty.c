@@ -216,3 +216,28 @@ void terminal_print_at_cursor(const char* str, uint8_t color, _Bool printNewLine
     // Update the cursor position to the end of the string
     update_cursor(x, y);
 }
+
+void terminal_scroll_down_screen(_Bool scrollCursor) {
+    // Loop through each row, except the last one
+    uint16_t posNumber = get_cursor_position();
+    size_t y = posNumber / VGA_WIDTH;
+    size_t x = posNumber % VGA_WIDTH;
+    for (size_t y = 0; y < VGA_HEIGHT - 1; y++) {
+        for (size_t x = 0; x < VGA_WIDTH; x++) {
+            // Copy each character from the row below to the current row
+            size_t current_index = y * VGA_WIDTH + x;
+            size_t next_row_index = (y + 1) * VGA_WIDTH + x;
+            terminal_buffer[current_index] = terminal_buffer[next_row_index];
+        }
+    }
+
+    // Clear the last row with null characters
+    for (size_t x = 0; x < VGA_WIDTH; x++) {
+        size_t last_row_index = (VGA_HEIGHT - 1) * VGA_WIDTH + x;
+        terminal_buffer[last_row_index] = vga_entry(' ', vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK));
+    }
+    if(scrollCursor){
+    update_cursor(x, y-1);
+    }
+}
+
