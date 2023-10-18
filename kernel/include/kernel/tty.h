@@ -16,4 +16,5 @@ void update_cursor(int x, int y);
 void disable_cursor();
 void terminal_printat(const char* str, uint8_t color, size_t x, size_t y);
 void terminal_print_at_cursor(const char* str, uint8_t color, _Bool printNewLineFirst);
+void terminal_scroll_down_screen(_Bool scrollCursor);
 #endif

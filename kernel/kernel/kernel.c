@@ -39,7 +39,10 @@ void kernel_main(void)
     // Set the text color for the terminal.
     terminal_setcolor(currentColor);
 
-    terminal_print_at_cursor("Hello World!", currentColor, false);
-    terminal_print_at_cursor("H2", currentColor, true);
-
+    terminal_print_at_cursor("Line1", currentColor, false);
+    terminal_print_at_cursor("Line2", currentColor, true);
+    terminal_print_at_cursor("Line3", currentColor, true);
+    terminal_print_at_cursor("Line4", currentColor, true);
+    terminal_scroll_down_screen(true);
+    terminal_scroll_down_screen(true);
 }
