@@ -39,23 +39,7 @@ void kernel_main(void)
     // Set the text color for the terminal.
     terminal_setcolor(currentColor);
 
-    // Print the terminal icon or prompt (e.g., "$>").
-    printf(term);
+    terminal_print_at_cursor("Hello World!", currentColor, false);
+    terminal_print_at_cursor("H2", currentColor, true);
 
-    // Update cursor pos
-    update_cursor(7, 1);
-
-    int posNumber = get_cursor_position();
-    // Calc X and Y pos
-    int y = posNumber / 80;
-    int x = posNumber % 80;
-    // Convert to CHAR
-    char XPOS = (char)(x + '0');
-    char YPOS = (char)(y + '0');
-
-    terminal_printat("Hello, World! ", currentColor, 0, 0);
-    posNumber = get_cursor_position();
-    y = posNumber / 80;
-    x = posNumber % 80;
-    terminal_printat("I love you baa", currentColor, x, y);
 }
