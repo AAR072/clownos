@@ -4,7 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
-
+extern int cursorXPos;
+extern int cursorYPos;
 void terminal_initialize(void);
 void terminal_putchar(char c);
 void terminal_write(const char* data, size_t size);

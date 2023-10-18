@@ -24,11 +24,11 @@
 
 char *input;               // A variable for storing input from the user (currently unused).
 char *terminalIcon = "$>"; // Icon or prompt displayed in the terminal.
-
+unsigned char text = 'J';
 char *term = "\n"; // Newline character, used to move to the next line.
 char *longtext = "sahjdsalhlsaakjhfalkjshflkjdsahflksajdhflksajhflkjsafhsalkfhdsalkjfsadfhakjsdhfsalkjdhf";
 
-int currentColors = 2; // Current text color for the terminal (e.g., VGA_COLOR_LIGHT_GREY).
+int currentColor = 2; // Current text color for the terminal (e.g., VGA_COLOR_LIGHT_GREY).
 
 // The main function for the kernel.
 void kernel_main(void)
@@ -37,10 +37,9 @@ void kernel_main(void)
     terminal_initialize();
 
     // Set the text color for the terminal.
-    terminal_setcolor(currentColors);
+    terminal_setcolor(currentColor);
 
     // Print the terminal icon or prompt (e.g., "$>").
-    printf(terminalIcon);
     printf(term);
 
     // Update cursor pos
@@ -53,8 +52,10 @@ void kernel_main(void)
     // Convert to CHAR
     char XPOS = (char)(x + '0');
     char YPOS = (char)(y + '0');
-    // Display Charc
 
-    printf("%c", XPOS);
-    printf("%c", YPOS);
+    terminal_printat("Hello, World! ", currentColor, 0, 0);
+    posNumber = get_cursor_position();
+    y = posNumber / 80;
+    x = posNumber % 80;
+    terminal_printat("I love you baa", currentColor, x, y);
 }
